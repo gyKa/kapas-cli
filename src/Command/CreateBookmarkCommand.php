@@ -55,7 +55,7 @@ class CreateBookmarkCommand extends Command
         $tags = $input->getArgument('tags');
 
         if ($tags) {
-            $tags = explode(' ', $tags);
+            $tags = explode(',', $tags);
         }
 
         $body = [
