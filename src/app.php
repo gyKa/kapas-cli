@@ -3,6 +3,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Command\CreateBookmarkCommand;
+use Command\GetBookmarksCommand;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Application;
 
@@ -14,5 +15,6 @@ $application = new Application();
 $client = new Client(['base_uri' => getenv('API_HOST')]);
 
 $application->add(new CreateBookmarkCommand($client));
+$application->add(new GetBookmarksCommand($client));
 
 $application->run();
