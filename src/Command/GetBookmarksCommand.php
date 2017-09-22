@@ -45,11 +45,11 @@ class GetBookmarksCommand extends Command
                 $titles[] = $tag->title;
             }
 
-            $data[] = [$row->id, $row->title, $row->url, join(',', $titles)];
+            $data[] = [$row->id, $row->title, join(',', $titles)];
         }
 
         $io->table(
-            ['ID', 'Title', 'URL', 'Tags'],
+            ['ID', 'Title', 'Tags'],
             $data
         );
     }
