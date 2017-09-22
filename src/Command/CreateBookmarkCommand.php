@@ -2,11 +2,13 @@
 
 namespace Command;
 
+use DOMDocument;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
 
@@ -35,12 +37,22 @@ class CreateBookmarkCommand extends Command
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $title = new Question('title: ');
-        $url = new Question('url: ');
-        $tags = new Question('tags: ');
 
-        $title = $helper->ask($input, $output, $title);
+        $url = new Question('url: ');
         $url = $helper->ask($input, $output, $url);
+
+        $titleDefault = $this->getTitle($url);
+        $titleQuestion = sprintf('Use this title? [%s]: ', $titleDefault);
+
+        $title = new ConfirmationQuestion($titleQuestion, false);
+        $title = $helper->ask($input, $output, $title);
+
+        if (!$title) {
+            $title = new Question('title: ', $titleDefault);
+            $title = $helper->ask($input, $output, $title);
+        }
+
+        $tags = new Question('tags: ');
         $tags = $helper->ask($input, $output, $tags);
 
         $input->setArgument('title', $title);
@@ -68,5 +80,21 @@ class CreateBookmarkCommand extends Command
 
         $output->writeln($response->getStatusCode());
         $output->writeln($response->getBody()->getContents());
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    private function getTitle(string $url)
+    {
+        $urlContents = file_get_contents($url);
+
+        $dom = new DOMDocument();
+        @$dom->loadHTML($urlContents);
+
+        $title = $dom->getElementsByTagName('title');
+
+        return $title->item(0)->nodeValue;
     }
 }
