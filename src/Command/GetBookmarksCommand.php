@@ -25,7 +25,7 @@ class GetBookmarksCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('bookmark:get')
+            ->setName('bookmark:get:all')
             ->setDescription('Gets all bookmarks.');
     }
 
