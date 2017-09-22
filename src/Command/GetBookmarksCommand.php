@@ -26,7 +26,7 @@ class GetBookmarksCommand extends Command
     {
         $this
             ->setName('bookmark:get')
-            ->setDescription('Gets all bookmarks');
+            ->setDescription('Gets all bookmarks.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
